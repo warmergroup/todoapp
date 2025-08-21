@@ -27,26 +27,25 @@
         <div class="checkbox"></div>
         <input type="text" placeholder="Create a new todo...">
     </div>
-    
-         <div class="todo-list">
-         <!-- Footer inside todo-list -->
-         <div class="list-footer">
-             <div class="items-left">0 items left</div>
-             <div class="filters">
-                 <span class="filter active">All</span>
-                 <span class="filter">Active</span>
-                 <span class="filter">Completed</span>
-             </div>
-             <div class="clear-completed">Clear Completed</div>
-         </div>
+        <div class="todo-list">
+        <!-- Footer inside todo-list -->
+        <div class="list-footer">
+            <div class="items-left">0 items left</div>
+            <div class="filters">
+                <span class="filter active" data-filter="all">All</span>
+                <span class="filter" data-filter="active">Active</span>
+                <span class="filter" data-filter="completed">Completed</span>
+            </div>
+            <div class="clear-completed">Clear Completed</div>
+        </div>
      </div>
     
     <!-- Separate filters component for mobile -->
     <div class="filters-container">
         <div class="filters">
-            <span class="filter active">All</span>
-            <span class="filter">Active</span>
-            <span class="filter">Completed</span>
+            <span class="filter active" data-filter="all">All</span>
+            <span class="filter" data-filter="active">Active</span>
+            <span class="filter" data-filter="completed">Completed</span>
         </div>
     </div>
     

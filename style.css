@@ -311,6 +311,11 @@ body {
   font-weight: 600;
 }
 
+/* Dark theme uchun active filter */
+[data-theme="dark"] .filter.active {
+  color: #3a7bfd;
+}
+
 .clear-completed {
   cursor: pointer;
   transition: color 0.3s;

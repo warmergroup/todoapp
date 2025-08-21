@@ -9,18 +9,34 @@ const todoList = document.querySelector(".todo-list");
 const itemsLeftElement = document.querySelector(".items-left");
 const clearCompletedBtn = document.querySelector(".clear-completed");
 
-// Mock data - initial todos
-let todos = [
-  { id: 1, text: "Complete online JavaScript course", completed: true },
-  { id: 2, text: "Jog around the park 3x", completed: false },
-  { id: 3, text: "10 minutes meditation", completed: false },
-  { id: 4, text: "Read for 1 hour", completed: false },
-  { id: 5, text: "Pick up groceries", completed: false },
-  { id: 6, text: "Complete Todo App on Frontend Mentor", completed: false }
-];
+// Filter elements
+const filterButtons = document.querySelectorAll(".filter");
 
 // Todo counter
-let nextId = 7;
+let nextId = 1;
+
+// Current filter state
+let currentFilter = 'all';
+
+// Todo-larni localStorage dan yuklash yoki default data ishlatish
+let todos = loadTodosFromStorage();
+
+// Agar localStorage da hech narsa yo'q bo'lsa, default data yuklash
+if (todos.length === 0) {
+  todos = [
+    { id: 1, text: "Complete online JavaScript course", completed: true },
+    { id: 2, text: "Jog around the park 3x", completed: false },
+    { id: 3, text: "10 minutes meditation", completed: false },
+    { id: 4, text: "Read for 1 hour", completed: false },
+    { id: 5, text: "Pick up groceries", completed: false },
+    { id: 6, text: "Complete Todo App on Frontend Mentor", completed: false }
+  ];
+  nextId = 7;
+  saveTodosToStorage();
+} else {
+  // localStorage dan yuklangan todo-lar bo'lsa, eng katta ID ni topish
+  nextId = Math.max(...todos.map(t => t.id)) + 1;
+}
 
 // Theme state
 let isDark = true;
@@ -91,8 +107,11 @@ function renderTodos() {
   const existingTodos = todoList.querySelectorAll(".todo-item");
   existingTodos.forEach(todo => todo.remove());
   
+  // Filter bo'yicha todo-larni filtrlash
+  const filteredTodos = filterTodos();
+  
   // Yangi todo item-larni yaratish
-  todos.forEach(todo => {
+  filteredTodos.forEach(todo => {
     const todoItem = createTodoElement(todo);
     todoList.insertBefore(todoItem, todoList.querySelector(".list-footer"));
   });
@@ -149,6 +168,9 @@ function addTodo() {
   // UI yangilash
   renderTodos();
   
+  // localStorage ga saqlash
+  saveTodosToStorage();
+  
   // Input-ni tozalash
   todoInput.value = "";
   
@@ -162,6 +184,7 @@ function toggleTodo(id) {
   if (todo) {
     todo.completed = !todo.completed;
     renderTodos();
+    saveTodosToStorage();
   }
 }
 
@@ -169,6 +192,7 @@ function toggleTodo(id) {
 function removeTodo(id) {
   todos = todos.filter(t => t.id !== id);
   renderTodos();
+  saveTodosToStorage();
 }
 
 // Items count yangilash
@@ -181,6 +205,47 @@ function updateItemsCount() {
 function clearCompleted() {
   todos = todos.filter(t => !t.completed);
   renderTodos();
+  saveTodosToStorage();
+}
+
+// Todo-larni localStorage ga saqlash
+function saveTodosToStorage() {
+  localStorage.setItem('todos', JSON.stringify(todos));
+}
+
+// Todo-larni localStorage dan yuklash
+function loadTodosFromStorage() {
+  const savedTodos = localStorage.getItem('todos');
+  return savedTodos ? JSON.parse(savedTodos) : [];
+}
+
+// Todo-larni filter qilish
+function filterTodos() {
+  switch (currentFilter) {
+    case 'active':
+      return todos.filter(todo => !todo.completed);
+    case 'completed':
+      return todos.filter(todo => todo.completed);
+    default:
+      return todos;
+  }
+}
+
+// Filter tugmasini bosish
+function setFilter(filter) {
+  currentFilter = filter;
+  
+  // Barcha filter tugmalaridan active class-ni olib tashlash
+  filterButtons.forEach(btn => btn.classList.remove('active'));
+  
+  // Bosilgan filter tugmasiga active class qo'shish
+  const activeButton = document.querySelector(`[data-filter="${filter}"]`);
+  if (activeButton) {
+    activeButton.classList.add('active');
+  }
+  
+  // Todo-larni qayta render qilish
+  renderTodos();
 }
 
 // Theme toggle button click event
@@ -188,6 +253,14 @@ themeToggleBtn.addEventListener("click", toggleTheme);
 
 // Clear completed button event listener
 clearCompletedBtn.addEventListener("click", clearCompleted);
+
+// Filter button event listeners
+filterButtons.forEach(button => {
+  button.addEventListener("click", () => {
+    const filter = button.dataset.filter;
+    setFilter(filter);
+  });
+});
 
 // Initialize theme on page load
 document.addEventListener('DOMContentLoaded', function() {
