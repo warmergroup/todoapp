@@ -147,6 +147,10 @@ body {
   transition: border 0.3s ease;
 }
 
+.todo-item .checkbox {
+  margin-top: 2px;
+}
+
 .checkbox:hover {
   border: 2px solid #ac2deb;
 }
@@ -195,11 +199,12 @@ body {
 
 .todo-item {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 15px;
   padding: 20px;
   border-bottom: 1px solid var(--footer-border);
   transition: border-color 0.5s ease;
+  min-height: 60px;
 }
 
 .todo-item:last-child {
@@ -213,6 +218,11 @@ body {
   font-family: 'Josefin Sans', sans-serif;
   color: #494C6B;
   font-size: 16px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+  line-height: 1.4;
+  padding-right: 10px;
 }
 
 .todo-item.completed .todo-text {
@@ -366,6 +376,17 @@ body {
   .input-container,
   .todo-item {
     padding: 15px;
+  }
+  
+  .todo-item {
+    align-items: flex-start;
+    gap: 12px;
+  }
+  
+  .todo-item .todo-text {
+    font-size: 14px;
+    line-height: 1.3;
+    padding-right: 5px;
   }
   
   .filters {
