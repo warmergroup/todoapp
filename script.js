@@ -103,17 +103,25 @@ todoInput.addEventListener("input", function() {
 
 // Todo render qilish funksiyasi
 function renderTodos() {
+  console.log('Rendering todos. Total todos:', todos.length, 'Filter:', currentFilter);
+  
   // Mavjud todo item-larni o'chirish (footer dan tashqari)
   const existingTodos = todoList.querySelectorAll(".todo-item");
   existingTodos.forEach(todo => todo.remove());
   
   // Filter bo'yicha todo-larni filtrlash
   const filteredTodos = filterTodos();
+  console.log('Filtered todos:', filteredTodos.length);
   
   // Yangi todo item-larni yaratish
   filteredTodos.forEach(todo => {
     const todoItem = createTodoElement(todo);
-    todoList.insertBefore(todoItem, todoList.querySelector(".list-footer"));
+    const listFooter = todoList.querySelector(".list-footer");
+    if (listFooter) {
+      todoList.insertBefore(todoItem, listFooter);
+  } else {
+      todoList.appendChild(todoItem);
+    }
   });
   
   // Items count yangilash
@@ -125,6 +133,9 @@ function createTodoElement(todo) {
   const todoItem = document.createElement("div");
   todoItem.className = `todo-item ${todo.completed ? 'completed' : ''}`;
   todoItem.dataset.id = todo.id;
+  
+  // DRAG AND DROP: Elementni drag qilish mumkin qilish
+  todoItem.draggable = true;
   
   todoItem.innerHTML = `
     <div class="checkbox ${todo.completed ? 'checked' : ''}"></div>
@@ -148,6 +159,133 @@ function addTodoEventListeners(todoItem, todo) {
   
   // Remove button click event
   removeBtn.addEventListener("click", () => removeTodo(todo.id));
+  
+  // DRAG AND DROP: Drag event listener-larini qo'shish
+  addDragAndDropListeners(todoItem, todo);
+}
+
+// DRAG AND DROP: Yangi funksiya - drag event listener-larini qo'shish
+function addDragAndDropListeners(todoItem, todo) {
+  // 1. Drag boshlanganda
+  todoItem.addEventListener('dragstart', () => {
+    // Adding dragging class to item after a delay
+    setTimeout(() => todoItem.classList.add("dragging"), 0);
+    
+    // Ushlangan todo-ni scale qilib ko'rsatish
+    todoItem.style.transform = 'scale(1.05)';
+    todoItem.style.zIndex = '1000';
+  });
+  
+  // 2. Drag tugaganda
+  todoItem.addEventListener('dragend', () => {
+    todoItem.classList.remove("dragging");
+    todoItem.style.transform = 'none';
+    todoItem.style.zIndex = 'auto';
+    
+    // Todo-larni qayta tartiblash va localStorage ga saqlash
+    reorderTodosFromDOM();
+  });
+}
+
+// DRAG AND DROP: Sortable list logikasi
+const initSortableList = (e) => {
+  e.preventDefault();
+  const draggingItem = document.querySelector(".dragging");
+  if (!draggingItem) return;
+  
+  // Getting all items except currently dragging and making array of them
+  let siblings = [...todoList.querySelectorAll(".todo-item:not(.dragging):not(.list-footer)")];
+  
+  if (siblings.length === 0) return;
+  
+  // Finding the sibling after which the dragging item should be placed
+  let nextSibling = siblings.find(sibling => {
+    const rect = sibling.getBoundingClientRect();
+    return e.clientY <= rect.top + rect.height / 2;
+  });
+  
+  // Inserting the dragging item before the found sibling
+  if (nextSibling) {
+    // Agar nextSibling topilgan bo'lsa, uning oldiga qo'yish
+    todoList.insertBefore(draggingItem, nextSibling);
+  } else {
+    // Agar nextSibling topilmagan bo'lsa (yani oxiriga qo'yish kerak)
+    // Barcha todo-lar orasida eng oxirgi joyga qo'yish
+    const lastTodoItem = siblings[siblings.length - 1];
+    if (lastTodoItem) {
+      todoList.insertBefore(draggingItem, lastTodoItem.nextSibling);
+    } else {
+      // Agar hech qanday todo yo'q bo'lsa, list-footer dan oldin qo'yish
+      const listFooter = todoList.querySelector('.list-footer');
+      if (listFooter) {
+        todoList.insertBefore(draggingItem, listFooter);
+      } else {
+        todoList.appendChild(draggingItem);
+      }
+    }
+  }
+};
+
+// DRAG AND DROP: Todo-larni DOM dan qayta tartiblash
+function reorderTodosFromDOM() {
+  const todoItems = document.querySelectorAll('.todo-item:not(.list-footer)');
+  const newTodos = [];
+  
+  todoItems.forEach(item => {
+    const todoId = parseInt(item.dataset.id);
+    const todo = todos.find(t => t.id === todoId);
+    if (todo) {
+      newTodos.push(todo);
+    }
+  });
+  
+  // Yangi tartibni saqlash
+  todos = newTodos;
+  saveTodosToStorage();
+}
+
+// DRAG AND DROP: Event listener-larni qo'shish
+todoList.addEventListener("dragover", initSortableList);
+todoList.addEventListener("dragenter", e => e.preventDefault());
+
+// DRAG AND DROP: Todo-larni qayta tartiblash (yaxshilangan)
+function reorderTodos(draggedId, targetId) {
+  // 1. Drag qilingan todo-ni topish
+  const draggedIndex = todos.findIndex(t => t.id === draggedId);
+  const targetIndex = todos.findIndex(t => t.id === targetId);
+  
+  if (draggedIndex === -1 || targetIndex === -1) return;
+  
+  // 2. Drop position ni aniqlash
+  const draggedElement = document.querySelector(`[data-id="${draggedId}"]`);
+  const targetElement = document.querySelector(`[data-id="${targetId}"]`);
+  
+  if (!draggedElement || !targetElement) return;
+  
+  const indicator = targetElement.querySelector('.drop-indicator');
+  const position = indicator ? indicator.dataset.position : 'bottom';
+  
+  // 3. Todo-ni array-dan olib tashlash
+  const [draggedTodo] = todos.splice(draggedIndex, 1);
+  
+  // 4. Position ga qarab yangi joyga qo'yish
+  let newIndex;
+  if (position === 'top') {
+    newIndex = targetIndex;
+  } else {
+    newIndex = targetIndex + 1;
+  }
+  
+  // Agar drag qilingan element pastga tushirilayotgan bo'lsa, index ni tuzatish
+  if (draggedIndex < newIndex) {
+    newIndex--;
+  }
+  
+  todos.splice(newIndex, 0, draggedTodo);
+  
+  // 5. UI va localStorage ni yangilash
+  renderTodos();
+  saveTodosToStorage();
 }
 
 // Todo qo'shish funksiyasi
@@ -216,11 +354,14 @@ function saveTodosToStorage() {
 // Todo-larni localStorage dan yuklash
 function loadTodosFromStorage() {
   const savedTodos = localStorage.getItem('todos');
-  return savedTodos ? JSON.parse(savedTodos) : [];
+  const parsedTodos = savedTodos ? JSON.parse(savedTodos) : [];
+  console.log('Loaded todos from storage:', parsedTodos);
+  return parsedTodos;
 }
 
 // Todo-larni filter qilish
 function filterTodos() {
+  console.log('Filtering todos. Current filter:', currentFilter, 'Total todos:', todos.length);
   switch (currentFilter) {
     case 'active':
       return todos.filter(todo => !todo.completed);

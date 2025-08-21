@@ -8,6 +8,8 @@
   --input-bg: #ffffff;
   --todo-bg: #ffffff;
   --footer-border: #f4f5fa;
+  --todo-text: #494C6B;
+  --completed-text:#D1D2DA;
   
   /* Light theme gradient colors */
   --gradient-start: #AC2DEB;
@@ -24,7 +26,9 @@
   --input-bg: #25273D;
   --todo-bg: #25273D;
   --footer-border: #393A4B;
-  
+  --todo-text: #C8CBE7;
+  --completed-text: #4D5067;
+
   /* Dark theme gradient colors */
   --gradient-start: #3710BD;
   --gradient-end: #A42395;
@@ -150,6 +154,23 @@ body {
 .todo-item .checkbox {
   margin-top: 2px;
 }
+.todo-item.dragging {
+  opacity: 0.6;
+  cursor: grabbing;
+  transform: scale(1.01);
+  z-index: 1000;
+  border: 1px dashed #ac2deb;
+  transition: all 0.2s ease;
+}
+
+.todo-item {
+  cursor: grab;
+  transition: all 0.2s ease;
+}
+
+.todo-item:active {
+  cursor: grabbing;
+}
 
 .checkbox:hover {
   border: 2px solid #ac2deb;
@@ -216,7 +237,7 @@ body {
 .todo-item .todo-text {
   flex: 1;
   font-family: 'Josefin Sans', sans-serif;
-  color: #494C6B;
+  color: var(--todo-text);
   font-size: 16px;
   word-wrap: break-word;
   overflow-wrap: break-word;
@@ -226,9 +247,9 @@ body {
 }
 
 .todo-item.completed .todo-text {
+  /* text decoration line-through */
   /* text-decoration: line-through; */
-  /* text-decoration: line-through; */
-  color: #d1d2da;
+  color: var(--completed-text);
 }
 .todo-item .remove-todo {
   cursor: pointer;
