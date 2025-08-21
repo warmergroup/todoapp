@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Todo App</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Orqa fon bo'linishi -->
+  <div class="background"></div>
+
+  <!-- Kontent qismi -->
+  <div class="container">
+    <div class="title-container">
+        <h1 class="title">TODO</h1>
+        <button class="theme-toggle">
+            <img src="/public/moon shape.svg" alt="theme-icon">
+        </button>
+    </div>
+    
+    <div class="input-container">
+        <div class="checkbox"></div>
+        <input type="text" placeholder="Create a new todo...">
+    </div>
+    
+    <div class="todo-list">
+        <div class="todo-item completed">
+            <div class="checkbox checked"></div>
+            <span class="todo-text">Complete online JavaScript course</span>
+        </div>
+        
+        <div class="todo-item">
+            <div class="checkbox"></div>
+            <span class="todo-text">Jog around the park 3x</span>
+        </div>
+        
+        <div class="todo-item">
+            <div class="checkbox"></div>
+            <span class="todo-text">10 minutes meditation</span>
+        </div>
+        
+        <div class="todo-item">
+            <div class="checkbox"></div>
+            <span class="todo-text">Read for 1 hour</span>
+        </div>
+        
+        <div class="todo-item">
+            <div class="checkbox"></div>
+            <span class="todo-text">Pick up groceries</span>
+        </div>
+        
+        <div class="todo-item">
+            <div class="checkbox"></div>
+            <span class="todo-text">Complete Todo App on Frontend Mentor</span>
+        </div>
+        
+        <!-- Footer inside todo-list -->
+        <div class="list-footer">
+            <div class="items_left">5 items left</div>
+            <div class="filters">
+                <span class="filter active">All</span>
+                <span class="filter">Active</span>
+                <span class="filter">Completed</span>
+            </div>
+            <div class="clear-completed">Clear Completed</div>
+        </div>
+    </div>
+    
+    <!-- Separate filters component for mobile -->
+    <div class="filters-container">
+        <div class="filters">
+            <span class="filter active">All</span>
+            <span class="filter">Active</span>
+            <span class="filter">Completed</span>
+        </div>
+    </div>
+    
+    <div class="drag-drop-text">Drag and drop to reorder list</div>
+  </div>
+</body>
+</html>
