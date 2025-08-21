@@ -43,10 +43,10 @@ function initTheme() {
 // Update theme icon
 function updateThemeIcon() {
   if (isDark) {
-    themeToggleBtn.src = "/public/moon.svg";
+    themeToggleBtn.src = "./public/moon.svg";
     themeToggleBtn.alt = "moon icon";
   } else {
-    themeToggleBtn.src = "/public/sun.svg";
+    themeToggleBtn.src = "./public/sun.svg";
     themeToggleBtn.alt = "sun icon";
   }
 }
@@ -110,7 +110,7 @@ function createTodoElement(todo) {
   todoItem.innerHTML = `
     <div class="checkbox ${todo.completed ? 'checked' : ''}"></div>
     <p class="todo-text">${todo.text}</p>
-    <span class="remove-todo"><img src="/public/x.svg" alt="remove icon"></span>
+    <span class="remove-todo"><img src="./public/x.svg" alt="remove icon"></span>
   `;
   
   // Event listener-larni qo'shish
