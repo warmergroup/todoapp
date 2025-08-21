@@ -92,7 +92,7 @@ inputCheckbox.addEventListener("click", function() {
   }
 });
 
-// Input-ga matn terilganda checkbox-ni checked qilish
+// Input-ga matn terilganda checkbox-ni checked qilodi
 todoInput.addEventListener("input", function() {
   if (this.value.trim() !== "") {
     inputCheckbox.classList.add("checked");

@@ -226,7 +226,8 @@ body {
 }
 
 .todo-item.completed .todo-text {
-  text-decoration: line-through;
+  /* text-decoration: line-through; */
+  /* text-decoration: line-through; */
   color: #d1d2da;
 }
 .todo-item .remove-todo {
