@@ -1,3 +1,35 @@
+:root {
+  /* Light theme colors */
+  --bg-color: #fafafa;
+  --text-color: #494C6B;
+  --text-secondary: #9495A5;
+  --border-color: #e3e4f1;
+  --shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  --input-bg: #ffffff;
+  --todo-bg: #ffffff;
+  --footer-border: #f4f5fa;
+  
+  /* Light theme gradient colors */
+  --gradient-start: #AC2DEB;
+  --gradient-end: #5596FF;
+}
+
+[data-theme="dark"] {
+  /* Dark theme colors */
+  --bg-color: #171823;
+  --text-color: #C8CBE7;
+  --text-secondary: #767992;
+  --border-color: #393A4B;
+  --shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  --input-bg: #25273D;
+  --todo-bg: #25273D;
+  --footer-border: #393A4B;
+  
+  /* Dark theme gradient colors */
+  --gradient-start: #3710BD;
+  --gradient-end: #A42395;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -11,18 +43,17 @@ body {
   position: relative;
 }
 
-/* Yuqori 1/3 qismda rasm */
+/* Background */
 .background {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
-  height: 35vh; /* sahifaning 1/3 balandligi */
+  height: 35vh;
   background: url("/images/backgroun-image.png") no-repeat center/cover;
   z-index: -1;
 }
 
-/* Gradient mask rasmning ustida */
 .background::before {
   content: "";
   position: fixed;
@@ -30,12 +61,11 @@ body {
   left: 0;
   width: 100%;
   height: 35vh;
-  background: linear-gradient(to right, #AC2DEB, #5596FF);
+  background: linear-gradient(to right, var(--gradient-start), var(--gradient-end));
   opacity: 0.7;
   z-index: 1;
+  transition: background 0.5s ease;
 }
-
-/* Pastki oq qism */
 .background::after {
   content: "";
   position: fixed;
@@ -43,11 +73,12 @@ body {
   left: 0;
   width: 100%;
   height: 65vh;
-  background: white;
+  background: var(--bg-color);
   z-index: -1;
+  transition: background-color 0.5s ease;
 }
 
-/* Kontent oynasi */
+/* Content */
 .container {
   top: 50px;
   margin: 0 auto;
@@ -97,16 +128,17 @@ body {
   align-items: center;
   gap: 15px;
   padding: 20px;
-  background: white;
+  background: var(--input-bg);
   border-radius: 5px;
   margin-bottom: 20px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow);
+  transition: background-color 0.5s ease, box-shadow 0.5s ease;
 }
 
 .input-container .checkbox {
   width: 20px;
   height: 20px;
-  border: 2px solid #e3e4f1;
+  border: 2px solid var(--border-color);
   border-radius: 50%;
   flex-shrink: 0;
   transition: border 0.3s ease;
@@ -121,11 +153,13 @@ body {
   flex: 1;
   border: none;
   outline: none;
+  background-color: var(--input-bg);
   font-size: 18px;
   font-weight: 400;
   line-height: 100%;
   font-family: 'Josefin Sans', sans-serif;
   color: #9495A5;
+  transition: background-color 0.5s ease, box-shadow 0.5s ease;
 }
 
 .input-container input::placeholder {
@@ -134,10 +168,11 @@ body {
 
 /* Todo list */
 .todo-list {
-  background: white;
+  background: var(--todo-bg);
   border-radius: 5px;
   margin-bottom: 20px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow);
+  transition: background-color 0.5s ease, box-shadow 0.5s ease;
 }
 
 .todo-item {
@@ -145,7 +180,8 @@ body {
   align-items: center;
   gap: 15px;
   padding: 20px;
-  border-bottom: 1px solid #f4f5fa;
+  border-bottom: 1px solid var(--footer-border);
+  transition: border-color 0.5s ease;
 }
 
 .todo-item:last-child {
@@ -153,9 +189,9 @@ body {
 }
 
 .todo-item .checkbox {
-  width: 24px; /* to  */
+  width: 24px;
   height: 24px;
-  border: 2px solid #e3e4f1;
+  border: 2px solid var(--border-color);
   border-radius: 50%;
   flex-shrink: 0;
   cursor: pointer;
@@ -218,12 +254,13 @@ body {
   justify-content: space-between;
   align-items: center;
   padding: 20px;
-  border-top: 1px solid #f4f5fa;
+  border-top: 1px solid var(--border-color);
   color: #9495a5;
   font-size: 14px;
+  transition: border-color 0.5s ease, box-shadow 0.5s ease;
 }
 
-/* Desktop holatida filterlar list-footer ichida */
+/* Filters */
 .list-footer .filters {
   display: flex;
   gap: 20px;
@@ -236,14 +273,15 @@ body {
   font-size: 14px;
 }
 
-/* Separate filters container */
+/* Filters container */
 .filters-container {
-  background: white;
+  background: var(--todo-bg);
   border-radius: 5px;
   margin-bottom: 20px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow);
   padding: 20px;
-  display: none; /* Mobile holatida ko'rinadi */
+  display: none;
+  transition: background-color 0.5s ease, box-shadow 0.5s ease;
 }
 
 .filters-container .filters {
@@ -310,7 +348,7 @@ body {
     text-align: center;
   }
   
-  /* Mobile holatida filterlar alohida componentda ko'rinadi */
+  /* Filters container */
   .filters-container {
     display: block;
   }
@@ -319,7 +357,7 @@ body {
     gap: 30px;
   }
   
-  /* Mobile holatida list-footer ichidagi filterlar ko'rinmaydi */
+  /* Filters */
   .list-footer .filters {
     display: none;
   }
